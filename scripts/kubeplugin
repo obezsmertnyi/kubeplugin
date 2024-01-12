@@ -1,0 +1,29 @@
+#!/bin/bash
+
+# Define command-line arguments
+
+RESOURCE_TYPE=$1
+NAMESPACE=$2 
+
+if [ "$#" -ne 2 ]; then
+  echo -e "Usage: \e[1;35m$0 kubeplugin <resource-type> <namespace>\e[0m"
+  echo ""
+  echo -e "Example: \e[1;34m k kubeplugin pod kube-system \e[0m"
+  exit 1
+fi
+
+# Retrieve resource usage statistics from Kubernetes
+kubectl top $RESOURCE_TYPE -n $2 | tail -n +2 | while read line
+do
+  # Extract CPU and memory usage from the output
+  NAME=$(echo $line | awk '{print $1}')
+  CPU=$(echo $line | awk '{print $2}')
+  MEMORY=$(echo $line | awk '{print $3}')
+
+echo -e "Resource: \e[1;32m$RESOURCE_TYPE\e[0m, Namespace: \e[1;33m$NAMESPACE\e[0m, Name: \e[1;34m$NAME\e[0m, CPU: \e[1;35m$CPU\e[0m, Memory: \e[1;36m$MEMORY\e[0m"
+# printf "%-10s |%-15s |%-50s |%-10s |%-15s|\n" "$RESOURCE_TYPE" "$NAME_SPACE" "$NAME" "$CPU" "$MEMORY"
+# printf "Resource%-2s | Namespace%-5s | Name%-45s | CPU(core) | Memory%-7s |  %s\n"
+
+  # Output the statistics to the console
+  # "Res
+done
